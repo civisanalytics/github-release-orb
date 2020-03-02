@@ -17,15 +17,11 @@ parameters:
     type: string
   file-path:
     description: |
-      File path to be uploaded in addition to the full repository.
+      File directory to be uploaded in addition to the full repository.
     type: string
     default: ""
 
-executor: github
-
 steps:
-  - attach_workspace:
-      at: .
   - run:
       name: Provide error if non-bash shell
       command: |
@@ -52,8 +48,8 @@ steps:
                 -u ${CIRCLE_PROJECT_USERNAME} \
                 -r ${CIRCLE_PROJECT_REPONAME} \
                 -c ${CIRCLE_SHA1} \
-                -n << parameters.title>> \
-                -b << parameters.description >> \
+                -n "<< parameters.title >>" \
+                -b "<< parameters.description >>" \
                 ${CURRENT_VERSION} \
                 << parameters.file-path >>
             fi
