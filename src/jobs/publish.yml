@@ -1,0 +1,59 @@
+description: |
+  Publish a new Github release by checking the previous version with the given current version.
+  Required environment variables for this Orb are:
+    1. GITHUB_TOKEN - Your GitHub personal access token
+    2. CIRCLE_PROJECT_USERNAME - GitHub repository's user or organization
+    3. CIRCLE_PROJECT_REPONAME - GitHub repository name
+
+parameters:
+  current-version:
+    description: Current tagged version of the new release
+    type: string
+  title:
+    description: Name of the release.
+    type: string
+  description:
+    description: Description of the release.
+    type: string
+  file-path:
+    description: |
+      File path to be uploaded in addition to the full repository.
+    type: string
+    default: ""
+
+executor: github
+
+steps:
+  - attach_workspace:
+      at: .
+  - run:
+    name: Provide error if non-bash shell
+    command: |
+      if [ ! -x /bin/bash ]; then
+        echo Bash not installed.
+        exit 1
+      fi
+  - run:
+      name: Provide error if cURL is not installed.
+      command: |
+        which curl > curl_exists; echo $? | grep -q '1' && echo curl not installed && rm curl_exists && exit 1
+        rm curl_exists
+  - run:
+      name: Publish Release on GitHub
+      shell: /bin/bash
+      command: |
+            URL="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest"
+            LAST_TAG=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" URL | jq -r .tag_name)
+            LAST_VERSION=${LAST_TAG#'v'}
+            CURRENT_VERSION="<< parameters.current-version>>"
+            if [ $CURRENT_VERSION != $LAST_VERSION ]; then
+              ghr \
+                -t ${GITHUB_TOKEN} \
+                -u ${CIRCLE_PROJECT_USERNAME} \
+                -r ${CIRCLE_PROJECT_REPONAME} \
+                -c ${CIRCLE_SHA1} \
+                -n << parameters.title>> \
+                -b << parameters.description >> \
+                ${CURRENT_VERSION} \
+                << parameters.file-path >>
+            fi
