@@ -27,12 +27,12 @@ steps:
   - attach_workspace:
       at: .
   - run:
-    name: Provide error if non-bash shell
-    command: |
-      if [ ! -x /bin/bash ]; then
-        echo Bash not installed.
-        exit 1
-      fi
+      name: Provide error if non-bash shell
+      command: |
+        if [ ! -x /bin/bash ]; then
+          echo Bash not installed.
+          exit 1
+        fi
   - run:
       name: Provide error if cURL is not installed.
       command: |
