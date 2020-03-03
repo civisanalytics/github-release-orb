@@ -13,6 +13,7 @@ parameters:
     type: string
     default: version.py
   changelog-path:
+    description: File path to the changelog containing the description of the release.
     type: string
     default: CHANGELOG.md
   file-path:
