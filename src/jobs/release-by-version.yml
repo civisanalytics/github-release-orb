@@ -1,0 +1,54 @@
+description: |
+  Publish a new GitHub Release for a repository by finding the version file and CHANGELOG.
+  This is intended for Python Repositories since we default to the version.py but other repository
+  use is allowed.
+
+executor: github
+
+parameters:
+  version-path:
+    description: |
+      File path to file containing the version. If not specified will default to version.py.
+      We will split the line matching version=x.y.z to get the version.
+    type: string
+    default: version.py
+  changelog-path:
+    type: string
+    default: CHANGELOG.md
+  file-path:
+    description: |
+      File directory to be uploaded in addition to the full repository.
+    type: string
+    default: ""
+  is-draft:
+    description: If true, then the release is a draft.
+    type: boolean
+    default: false
+  is-pre-release:
+    description: If true, then the release is a pre-release.
+    type: boolean
+    default: false
+
+steps:
+  - checkout
+  - run:
+      name: Provide error if awk is not installed.
+      command: |
+        which awk > awk_exists; echo $? | grep -q '1' && echo awk not installed && rm awk_exists && exit 1
+        rm awk_exists
+  - run:
+      name: Find and set version.
+      command: |
+        CURRENT_VERSION = $(grep 'version' -i << parameters.version-path >> | cut -d '=' -f2 | tr -s " " | cut -d ' ' -f2)
+        echo "export CURRENT_VERSION=${CURRENT_VERSION}" >> $BASH_ENV
+        DESCRIPTION = awk -v ver=$CURRENT_VERSION '/^## / { if (p) { exit }; if ($0 ~ ver) { p=1; next} } p && NF' << parameters.changelog-path >>
+        echo "export DESCRIPTION=${DESCRIPTION}" >> $BASH_ENV
+        TITLE = awk -v ver=$CURRENT_VERSION '/^## / { if ($0 ~ ver) { print $0; exit} } p && NF' << parameters.changelog-path >>
+        echo "export TITLE=${TITLE}" >> $BASH_ENV
+  - publish:
+      current-version: $CURRENT-VERSION
+      title: $TITLE
+      description: $DESCRIPTION
+      file-path: << parameters.file-path >>
+      is-draft: << parameters.is-draft >>
+      is-pre-release: << parameters.is-pre-release >>

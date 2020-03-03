@@ -20,6 +20,14 @@ parameters:
       File directory to be uploaded in addition to the full repository.
     type: string
     default: ""
+  is-draft:
+    description: If true, then the release is a draft.
+    type: boolean
+    default: false
+  is-pre-release:
+    description: If true, then the release is a pre-release.
+    type: boolean
+    default: false
 
 steps:
   - run:
@@ -50,6 +58,8 @@ steps:
             --commitish ${CIRCLE_SHA1} \
             --name "<< parameters.title >>" \
             --body "<< parameters.description >>" \
+            <<# parameters.is-draft >> --draft <</ parameters.is-draft >> \
+            <<# parameters.is-pre-release >> --prerelease <</ parameters.is-pre-release >> \
             ${VERSION} \
             << parameters.file-path >>
         fi
