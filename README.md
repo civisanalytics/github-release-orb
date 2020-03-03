@@ -25,6 +25,12 @@ In order to build the orb you can run the following command in the root director
 
 Do not commit the created `orb.yml` file. This file is for publishing to CircleCI when finished.
 
+## Required Environment Variables
+In order for this orb to work, you must have three Environment Variables set:
+1. `GITHUB_TOKEN` - Your GitHub personal access token.
+2. `CIRCLE_PROJECT_USERNAME` - GitHub repository's user or organization. This should be set automatically.
+3. `CIRCLE_PROJECT_REPONAME` - GitHub repository name. This should be set automatically.
+
 ## Commands
 
 ### Publish
