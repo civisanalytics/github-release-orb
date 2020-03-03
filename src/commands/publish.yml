@@ -41,6 +41,7 @@ steps:
       name: Provide error if cURL is not installed.
       command: |
         which curl | grep -q '1' && echo curl not installed && exit 1
+        exit 0
   - run:
       name: Publish Release on GitHub
       shell: /bin/bash
