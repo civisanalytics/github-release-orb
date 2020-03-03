@@ -33,11 +33,6 @@ parameters:
 steps:
   - checkout
   - run:
-      name: Provide error if awk is not installed.
-      command: |
-        which awk > awk_exists; echo $? | grep -q '1' && echo awk not installed && rm awk_exists && exit 1
-        rm awk_exists
-  - run:
       name: Find and set version.
       command: |
         CURRENT_VERSION=$(grep 'version' -i << parameters.version-path >> | cut -d '=' -f2 | tr -s " " | cut -d ' ' -f2)
