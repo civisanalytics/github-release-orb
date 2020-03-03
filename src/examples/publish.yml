@@ -7,7 +7,10 @@ usage:
   workflows:
     your-workflow:
       jobs:
-        - github-release/publish:
-            current-version: a.b.c
-            title: title
-            description: description
+        - publish-github-release:
+            executor: github-release/github
+            steps:
+              - github-release/publish:
+                  current-version: a.b.c
+                  title: title
+                  description: description
