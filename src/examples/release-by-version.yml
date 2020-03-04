@@ -12,3 +12,4 @@ usage:
             version-path: ./subfolder/_version.py
             changelog-path: CHANGELOG.md
             is-draft: true
+            include-distribution: true

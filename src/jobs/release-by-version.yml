@@ -3,7 +3,7 @@ description: |
   This is intended for Python Repositories since we default to the version.py but other repository
   use is allowed.
 
-executor: github
+executor: default
 
 parameters:
   version-path:
@@ -29,22 +29,34 @@ parameters:
     description: If true, then the release is a pre-release.
     type: boolean
     default: false
+  include-distribution:
+    description: If true, then create a distribution and include it in the release.
+    type: boolean
+    default: false
 
 steps:
   - checkout
-  - run:
-      name: Find and set version.
-      command: |
-        CURRENT_VERSION=$(grep 'version' -i << parameters.version-path >> | cut -d '=' -f2 | tr -s " " | cut -d ' ' -f2)
-        echo "export CURRENT_VERSION=${CURRENT_VERSION}" >> $BASH_ENV
-        DESCRIPTION=$(awk -v ver=$CURRENT_VERSION '/^## / { if (p) { exit }; if ($0 ~ ver) { p=1; next} } p && NF' << parameters.changelog-path >>)
-        echo "export DESCRIPTION='${DESCRIPTION}'" >> $BASH_ENV
-        TITLE=$(awk -v ver=$CURRENT_VERSION '/^## / { if ($0 ~ ver) { print $0; exit} } p && NF' << parameters.changelog-path >> | tr -d '##')
-        echo "export TITLE='${TITLE}'" >> $BASH_ENV
-  - publish:
-      current-version: $CURRENT_VERSION
-      title: $TITLE
-      description: $DESCRIPTION
-      file-path: << parameters.file-path >>
-      is-draft: << parameters.is-draft >>
-      is-pre-release: << parameters.is-pre-release >>
+  - set-version-details:
+      version-path: << parameters.version-path >>
+      changelog-path: << parameters.changelog-path >>
+  - when:
+      condition: << parameters.include-distribution >>
+      steps:
+        - create-distribution
+        - publish:
+            current-version: $CURRENT_VERSION
+            title: $TITLE
+            description: $DESCRIPTION
+            file-path: ./dist
+            is-draft: << parameters.is-draft >>
+            is-pre-release: << parameters.is-pre-release >>
+  - unless:
+      condition: << parameters.include-distribution >>
+      steps:
+        - publish:
+            current-version: $CURRENT_VERSION
+            title: $TITLE
+            description: $DESCRIPTION
+            file-path: << parameters.file-path >>
+            is-draft: << parameters.is-draft >>
+            is-pre-release: << parameters.is-pre-release >>

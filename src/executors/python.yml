@@ -1,0 +1,10 @@
+description: The official CircleCI Python Docker image.
+
+parameters:
+  tag:
+    default: latest
+    description: The `circleci/python` Docker image version tag.
+    type: string
+
+docker:
+  - image: circleci/python:<< parameters.tag >>

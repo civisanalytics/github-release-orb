@@ -1,0 +1,22 @@
+description: |
+  Publish a new GitHub Release for a Python repository with a distribution included.
+
+executor: python
+
+parameters:
+  is-draft:
+    description: If true, then the release is a draft.
+    type: boolean
+    default: false
+  is-pre-release:
+    description: If true, then the release is a pre-release.
+    type: boolean
+    default: false
+
+steps:
+  - checkout
+  - create-distribution
+  - persist_to_workspace:
+      root: .
+      paths:
+        - dist/*

@@ -1,0 +1,13 @@
+description: |
+  Create a Python distribution using setuptools.
+
+steps:
+  - run:
+      name: Provide error if python is not installed.
+      command: |
+        which python | grep -q '1' && echo python not installed && exit 1
+        exit 0
+  - run:
+      name: Create Python distribution.
+      command: |
+        python setup.py sdist
