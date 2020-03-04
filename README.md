@@ -71,7 +71,7 @@ This is a job to publish a new GitHub Release by checking the version file and C
 | `is-pre-release` | boolean | If true, then the release is a pre-release. | false |`false` |
 
 ## Dependencies / Requirements
-We have checks in place to make sure the following are installed within the container otherwise an error message will be logged and task failed. If your job uses, the `github` executor, these dependencies will be installed. Otherwise, we recommend the following Docker images that will ensure these are downloaded:
+We have checks in place to make sure the following are installed within the container otherwise an error message will be logged and task failed. If your job uses the `github` executor, these dependencies will be installed. Otherwise, we recommend the following Docker images that will ensure these are downloaded:
 
 * cibuilds/github:0.13
 
