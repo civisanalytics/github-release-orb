@@ -15,8 +15,8 @@ parameters:
 
 steps:
   - checkout
-  - create-distribution
+  - run-setup-distribution
   - persist_to_workspace:
       root: .
       paths:
-        - dist/*
+        - ./*

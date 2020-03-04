@@ -1,0 +1,28 @@
+description: |
+  Publish a new GitHub Release for a repository using set-version-details command and create-distribution job.
+
+usage:
+  version: 2.1
+  orbs:
+    github-release: civisanalytics/github-release@x.y.z
+  jobs:
+    release-to-git:
+      executor: github
+      steps:
+        - attach_workspace:
+            at: .
+        - github-release/set-version-details:
+            version-path: ./subfolder/_version.py
+            changelog-path: CHANGELOG.md
+        - github-release/publish:
+            current-version: $CURRENT_VERSION
+            title: $TITLE
+            description: $DESCRIPTION
+            file-path: ./dist
+  workflows:
+    your-workflow:
+      jobs:
+        - github-release/create-distribution
+        - release-to-git:
+            requires:
+              - github-release/create-distribution

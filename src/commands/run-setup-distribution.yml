@@ -1,0 +1,8 @@
+description: |
+  Create a Python distribution using setuptools.
+
+steps:
+  - run:
+      name: Create Python distribution.
+      command: |
+        python setup.py sdist

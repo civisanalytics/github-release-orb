@@ -1,3 +1,0 @@
-docker:
-  - image: cibuilds/github:0.13
-  - image: circleci/python:latest
