@@ -26,7 +26,7 @@ In order for this orb to work, you must have three Environment Variables set:
 
 ### Commands
 
-#### Publish
+#### publish
 Publish a new GitHub Release if the last version does not match the current version. This command is useful for running within a custom job. If no custom job is needed, we recommend using the built-in `publish-github-release` job provided by this orb.
 
 | Parameter | Type | Description | Required | Default |
@@ -37,6 +37,22 @@ Publish a new GitHub Release if the last version does not match the current vers
 | `file-path` | string | File directory to be uploaded in addition to the full repository. | false | `""`|
 | `is-draft` | boolean | If true, then the release is a draft. | false | `false` |
 | `is-pre-release` | boolean | If true, then the release is a pre-release. | false| `false` |
+
+#### set-release-details
+Find and set environment variables for a potential github release by parsing the given `version-path` and `changelog-path` parameters.
+
+This will set the following environment variables:
+* CURRENT_VERSION - The version of the release
+* DESCRIPTION - The description of the release
+* TITLE - The title of the release.
+
+Since this orb is intended for use with Python repositories, the `version-path` parameter defaults to `version.py`.
+
+| Parameter | Type | Description | Required | Default |
+| --- | --- | --- | --- | --- |
+| `version-path` | string | File path to file containing the version. If not specified will default to version.py. We will split the line matching `version=x.y.z` to get the version. | false |  `version.py`|
+| `changelog-path` | string | File path to the changelog containing the description of the release. The format should follow typical [Changlog Symantics](https://keepachangelog.com/en/1.0.0/). | false | `CHANGELOG.md` |
+
 
 ### Jobs
 
