@@ -89,7 +89,7 @@ This is a job to publish a new GitHub Release by checking the version file and C
 ### Dependencies / Requirements
 We have checks in place to make sure the following are installed within the container otherwise an error message will be logged and task failed. If your job uses the `github` executor, these dependencies will be installed. Otherwise, we recommend the following Docker images that will ensure these are downloaded:
 
-* cibuilds/github:0.13
+* [cibuilds/github:0.13](https://github.com/cibuilds/github/blob/master/0.13/Dockerfile)
 
 
 #### Bash Shell
@@ -115,6 +115,6 @@ Once ready to publish a new version of the orb you can follow these steps:
 1. Build the orb by running: `circleci config pack src > orb.yml`. Do not commit the created `orb.yml` file. This file is for publishing to CircleCI when finished.
 2. Once the orb is built, we can verify the orb is valid by running `circleci orb validate orb.yml`.
 3. Publish a dev version of the orb by running `circleci orb publish orb.yml civisanalytics/github-release@dev:<version>`. This dev version is available only to civisanalytics and will expire 90 days after each publish. This can be used for testing the orb before a final release.
-4. When ready to publish the orb, email IT at it-help@civisanalytics.com to have them run `circleci orb publish promote civisanalytics/github-release@dev:<version> <segment>` where `segment` is either `major`, `minor`, or `patch` and it will auto-increment the published version of the orb.
+4. When ready to publish the orb, the orb owner can run `circleci orb publish promote civisanalytics/github-release@dev:<version> <segment>` where `segment` is either `major`, `minor`, or `patch` and it will auto-increment the published version of the orb.
 
 For more information about publishing orbs see the CircleCI docs on [Publishing Orbs](https://circleci.com/docs/2.0/creating-orbs/#section=configuration).
