@@ -16,7 +16,14 @@ jobs:
     executor: github-release/github
   steps:
     - github-release/<command>
+workflows:
+  workflow:
+    jobs:
+      - github-release/<job>:
+          <job-parameter>: <value>
 ```
+
+See `examples` folder for more concrete examples on how to use this orb.
 
 ### Required Environment Variables
 In order for this orb to work, you must have three Environment Variables set:
