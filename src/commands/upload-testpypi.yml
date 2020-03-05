@@ -1,0 +1,22 @@
+description: |
+  Upload project to the TestPyPI instance.
+  Required environment variables for this element are:
+    1. TESTPYPI_USERNAME - Your TestPyPI account username
+    2. TESTPYPI_PASSWORD - Your TestPyPI account password
+
+steps:
+  - run:
+      name: init .pypirc
+      command: |
+        echo -e "[distutils]" >> ~/.pypirc
+        echo -e "index-servers=" >> ~/.pypirc
+        echo -e "testpypi" >> ~/.pypirc
+        echo -e "[testpypi]" >> ~/.pypirc
+        echo -e "repository: https://test.pypi.org/legacy/" >> ~/.pypirc
+        echo -e "username: ${TESTPYPI_USERNAME}" >> ~/.pypirc
+
+  - run-setup-distribution
+  - run:
+      name: upload to TestPyPI
+      command: |
+        twine upload -r testpypi -p ${TESTPYPI_PASSWORD} ./dist/*
