@@ -3,16 +3,6 @@ description: |
 
 executor: python
 
-parameters:
-  is-draft:
-    description: If true, then the release is a draft.
-    type: boolean
-    default: false
-  is-pre-release:
-    description: If true, then the release is a pre-release.
-    type: boolean
-    default: false
-
 steps:
   - checkout
   - run-setup-distribution

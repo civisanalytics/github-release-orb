@@ -3,7 +3,7 @@ description: |
   This is intended for Python Repositories since we default to the version.py but other repository
   use is allowed.
 
-executor: default
+executor: github
 
 parameters:
   version-path:
@@ -29,34 +29,16 @@ parameters:
     description: If true, then the release is a pre-release.
     type: boolean
     default: false
-  include-distribution:
-    description: If true, then create a distribution and include it in the release.
-    type: boolean
-    default: false
 
 steps:
   - checkout
   - set-version-details:
       version-path: << parameters.version-path >>
       changelog-path: << parameters.changelog-path >>
-  - when:
-      condition: << parameters.include-distribution >>
-      steps:
-        - create-distribution
-        - publish:
-            current-version: $CURRENT_VERSION
-            title: $TITLE
-            description: $DESCRIPTION
-            file-path: ./dist
-            is-draft: << parameters.is-draft >>
-            is-pre-release: << parameters.is-pre-release >>
-  - unless:
-      condition: << parameters.include-distribution >>
-      steps:
-        - publish:
-            current-version: $CURRENT_VERSION
-            title: $TITLE
-            description: $DESCRIPTION
-            file-path: << parameters.file-path >>
-            is-draft: << parameters.is-draft >>
-            is-pre-release: << parameters.is-pre-release >>
+  - publish:
+      current-version: $CURRENT_VERSION
+      title: $TITLE
+      description: $DESCRIPTION
+      file-path: << parameters.file-path >>
+      is-draft: << parameters.is-draft >>
+      is-pre-release: << parameters.is-pre-release >>
