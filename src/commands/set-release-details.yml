@@ -1,0 +1,28 @@
+description: |
+  Find and set environment variables for a potential github release.
+  This will set the following environment variables:
+                CURRENT_VERSION - The version of the release,
+                DESCRIPTION - The description of the release, and
+                TITLE - The title of the release.
+parameters:
+  version-path:
+    description: |
+      File path to file containing the version. If not specified will default to version.py.
+      We will split the line matching version=x.y.z to get the version.
+    type: string
+    default: version.py
+  changelog-path:
+    description: File path to the changelog containing the description of the release.
+    type: string
+    default: CHANGELOG.md
+
+steps:
+  - run:
+      name: Find and set version.
+      command: |
+        CURRENT_VERSION=$(grep 'version' -i << parameters.version-path >> | cut -d '=' -f2 | tr -s " " | cut -d ' ' -f2)
+        echo "export CURRENT_VERSION=${CURRENT_VERSION}" >> $BASH_ENV
+        DESCRIPTION=$(awk -v ver=$CURRENT_VERSION '/^## / { if (p) { exit }; if ($0 ~ ver) { p=1; next} } p && NF' << parameters.changelog-path >>)
+        echo "export DESCRIPTION='${DESCRIPTION}'" >> $BASH_ENV
+        TITLE=$(awk -v ver=$CURRENT_VERSION '/^## / { if ($0 ~ ver) { print $0; exit} } p && NF' << parameters.changelog-path >> | tr -d '##')
+        echo "export TITLE='${TITLE}'" >> $BASH_ENV

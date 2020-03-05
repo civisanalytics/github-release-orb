@@ -1,0 +1,13 @@
+description: Publish a new GitHub Release.
+
+usage:
+  version: 2.1
+  orbs:
+    github-release: civisanalytics/github-release@x.y.z
+  workflows:
+    your-workflow:
+      jobs:
+        - github-release/publish-github-release:
+            version: a.b.c
+            title: title
+            description: description

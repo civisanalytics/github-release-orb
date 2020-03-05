@@ -1,5 +1,6 @@
 description: |
-  Publish a new GitHub Release for a repository by finding the version file and CHANGELOG.
+  Publish a new GitHub Release for a repository by finding the version file and CHANGELOG then publishing a
+  release if the found version does not match the previous version.
   This is intended for Python Repositories since we default to the version.py but other repository
   use is allowed.
 
@@ -32,17 +33,11 @@ parameters:
 
 steps:
   - checkout
-  - run:
-      name: Find and set version.
-      command: |
-        CURRENT_VERSION=$(grep 'version' -i << parameters.version-path >> | cut -d '=' -f2 | tr -s " " | cut -d ' ' -f2)
-        echo "export CURRENT_VERSION=${CURRENT_VERSION}" >> $BASH_ENV
-        DESCRIPTION=$(awk -v ver=$CURRENT_VERSION '/^## / { if (p) { exit }; if ($0 ~ ver) { p=1; next} } p && NF' << parameters.changelog-path >>)
-        echo "export DESCRIPTION='${DESCRIPTION}'" >> $BASH_ENV
-        TITLE=$(awk -v ver=$CURRENT_VERSION '/^## / { if ($0 ~ ver) { print $0; exit} } p && NF' << parameters.changelog-path >> | tr -d '##')
-        echo "export TITLE='${TITLE}'" >> $BASH_ENV
+  - set-release-details:
+      version-path: << parameters.version-path >>
+      changelog-path: << parameters.changelog-path >>
   - publish:
-      current-version: $CURRENT_VERSION
+      version: $CURRENT_VERSION
       title: $TITLE
       description: $DESCRIPTION
       file-path: << parameters.file-path >>

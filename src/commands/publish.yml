@@ -1,12 +1,12 @@
 description: |
-  Publish a new Github release by checking the previous version with the given current version.
+  Publish a new Github release if the previous version does not match the given version.
   Required environment variables for this Orb are:
     1. GITHUB_TOKEN - Your GitHub personal access token
     2. CIRCLE_PROJECT_USERNAME - GitHub repository's user or organization
     3. CIRCLE_PROJECT_REPONAME - GitHub repository name
 
 parameters:
-  current-version:
+  version:
     description: Current tagged version of the new release
     type: string
   title:
@@ -49,7 +49,7 @@ steps:
         URL="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest"
         LAST_TAG=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" $URL | jq -r .tag_name)
         LAST_VERSION=${LAST_TAG#'v'}
-        VERSION="<< parameters.current-version>>"
+        VERSION="<< parameters.version>>"
         if [ $VERSION != $LAST_VERSION ]; then
           ghr \
             --token ${GITHUB_TOKEN} \
