@@ -1,5 +1,5 @@
 description: |
-  Find and set environment variables for a github release.
+  Find and set environment variables for a potential github release.
   This will set the following environment variables:
                 CURRENT_VERSION - The version of the release,
                 DESCRIPTION - The description of the release, and

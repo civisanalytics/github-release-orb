@@ -11,6 +11,6 @@ usage:
             executor: github-release/github
             steps:
               - github-release/publish:
-                  current-version: a.b.c
+                  version: a.b.c
                   title: title
                   description: description

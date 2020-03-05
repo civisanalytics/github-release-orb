@@ -3,7 +3,7 @@ description: Publish a new GitHub Release.
 executor: github
 
 parameters:
-  current-version:
+  version:
     description: Current tagged version of the new release
     type: string
   title:
@@ -28,7 +28,7 @@ parameters:
 
 steps:
   - publish:
-      current-version: << parameters.current-version >>
+      version: << parameters.version >>
       title: << parameters.title >>
       description: << parameters.description >>
       file-path: << parameters.file-path >>
