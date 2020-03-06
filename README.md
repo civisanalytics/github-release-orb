@@ -58,7 +58,7 @@ Since this orb is intended for use with Python repositories, the `version-path` 
 | Parameter | Type | Description | Required | Default |
 | --- | --- | --- | --- | --- |
 | `version-path` | string | File path to file containing the version. If not specified will default to version.py. We will split the line matching `version=x.y.z` to get the version. | false |  `version.py`|
-| `changelog-path` | string | File path to the changelog containing the description of the release. The format should follow typical [Changlog Symantics](https://keepachangelog.com/en/1.0.0/). | false | `CHANGELOG.md` |
+| `changelog-path` | string | File path to the changelog containing the description of the release. The format should follow typical Markdown style and [Changlog Symantics](https://keepachangelog.com/en/1.0.0/). | false | `CHANGELOG.md` |
 
 
 ### Jobs
@@ -81,7 +81,7 @@ This is a job to publish a new GitHub Release by checking the version file and C
 | Parameter | Type | Description | Required | Default |
 | --- | --- | --- | --- | --- |
 | `version-path` | string | File path to file containing the version. If not specified will default to version.py. We will split the line matching `version=x.y.z` to get the version. | false |  `version.py`|
-| `changelog-path` | string | File path to the changelog containing the description of the release. The format should follow typical [Changlog Symantics](https://keepachangelog.com/en/1.0.0/). | false | `CHANGELOG.md` |
+| `changelog-path` | string | File path to the changelog containing the description of the release. The format should follow typical Markdown style and [Changlog Symantics](https://keepachangelog.com/en/1.0.0/). | false | `CHANGELOG.md` |
 | `file-path` | string | File directory to be uploaded in addition to the full repository. | false | `""`|
 | `is-draft` | boolean | If true, then the release is a draft. | false | `false` |
 | `is-pre-release` | boolean | If true, then the release is a pre-release. | false |`false` |
