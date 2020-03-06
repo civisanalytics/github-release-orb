@@ -1,8 +1,7 @@
 description: |
-  Publish a new GitHub Release for a repository by finding the version file and CHANGELOG then publishing a
-  release if the found version does not match the previous version.
-  This is intended for Python Repositories since we default to the version.py but other repository
-  use is allowed.
+  Conditionally publish a new GitHub Release for a repository based on the version file.
+  If the version in the version file does not match the latest Github Release, a new release will be generated.
+  Release description will be parsed from CHANGELOG.md by default.
 
 executor: github
 

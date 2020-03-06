@@ -4,7 +4,7 @@ executor: github
 
 parameters:
   version:
-    description: Current tagged version of the new release
+    description: Version of the codebase. Orb will create a new github release only if different from the previous version.
     type: string
   title:
     description: Name of the release.
