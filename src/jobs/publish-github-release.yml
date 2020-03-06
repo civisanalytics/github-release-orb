@@ -1,0 +1,36 @@
+description: Publish a new GitHub Release.
+
+executor: github
+
+parameters:
+  version:
+    description: Version of the codebase. Orb will create a new github release only if different from the previous version.
+    type: string
+  title:
+    description: Name of the release.
+    type: string
+  description:
+    description: Description of the release.
+    type: string
+  file-path:
+    description: |
+      File directory to be uploaded in addition to the full repository.
+    type: string
+    default: ""
+  is-draft:
+    description: If true, then the release is a draft.
+    type: boolean
+    default: false
+  is-pre-release:
+    description: If true, then the release is a pre-release.
+    type: boolean
+    default: false
+
+steps:
+  - publish:
+      version: << parameters.version >>
+      title: << parameters.title >>
+      description: << parameters.description >>
+      file-path: << parameters.file-path >>
+      is-draft: << parameters.is-draft >>
+      is-pre-release: << parameters.is-pre-release >>

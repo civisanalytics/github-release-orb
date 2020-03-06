@@ -1,0 +1,65 @@
+description: |
+  Publish a new Github release if the previous version does not match the given version.
+  Required environment variables for this Orb are:
+    1. GITHUB_TOKEN - Your GitHub personal access token
+    2. CIRCLE_PROJECT_USERNAME - GitHub repository's user or organization
+    3. CIRCLE_PROJECT_REPONAME - GitHub repository name
+
+parameters:
+  version:
+    description: Version of the codebase. Orb will create a new github release only if different from the previous version.
+    type: string
+  title:
+    description: Name of the release.
+    type: string
+  description:
+    description: Description of the release.
+    type: string
+  file-path:
+    description: |
+      File directory to be uploaded in addition to the full repository.
+    type: string
+    default: ""
+  is-draft:
+    description: If true, then the release is a draft.
+    type: boolean
+    default: false
+  is-pre-release:
+    description: If true, then the release is a pre-release.
+    type: boolean
+    default: false
+
+steps:
+  - run:
+      name: Provide error if non-bash shell
+      command: |
+        if [ ! -x /bin/bash ]; then
+          echo Bash not installed.
+          exit 1
+        fi
+  - run:
+      name: Provide error if cURL is not installed.
+      command: |
+        which curl | grep -q '1' && echo curl not installed && exit 1
+        exit 0
+  - run:
+      name: Publish Release on GitHub
+      shell: /bin/bash
+      command: |
+        URL="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest"
+        LAST_TAG=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" $URL | jq -r .tag_name)
+        LAST_VERSION=${LAST_TAG#'v'}
+        VERSION="<< parameters.version>>"
+        if [ $VERSION != $LAST_VERSION ]; then
+          ghr \
+            --token ${GITHUB_TOKEN} \
+            --username ${CIRCLE_PROJECT_USERNAME} \
+            --repository ${CIRCLE_PROJECT_REPONAME} \
+            --commitish ${CIRCLE_SHA1} \
+            --name "<< parameters.title >>" \
+            --body "<< parameters.description >>" \
+            <<# parameters.is-draft >> --draft <</ parameters.is-draft >> \
+            <<# parameters.is-pre-release >> --prerelease <</ parameters.is-pre-release >> \
+            ${VERSION} \
+            << parameters.file-path >>
+        fi

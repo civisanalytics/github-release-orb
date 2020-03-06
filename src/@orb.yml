@@ -1,0 +1,5 @@
+version: 2.1
+
+description: >
+  Create automated releases to GitHub for your CircleCI projects.
+  View this orb's source: https://github.com/civisanalytics/github-release-orb

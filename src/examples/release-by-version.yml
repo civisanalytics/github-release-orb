@@ -1,0 +1,14 @@
+description: |
+  Publish a new GitHub Release for a repository using release-by-version job.
+
+usage:
+  version: 2.1
+  orbs:
+    github-release: civisanalytics/github-release@x.y.z
+  workflows:
+    your-workflow:
+      jobs:
+        - github-release/release-by-version:
+            version-path: ./subfolder/_version.py
+            changelog-path: CHANGELOG.md
+            is-draft: true

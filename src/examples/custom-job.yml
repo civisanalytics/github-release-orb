@@ -1,0 +1,28 @@
+description: |
+  Publish a new GitHub Release with custom logic to create a file and add it to the release.
+
+usage:
+  version: 2.1
+  orbs:
+    github-release: civisanalytics/github-release@x.y.z
+  jobs:
+    custom-job:
+      executor: github-release/github
+      steps:
+        - checkout
+        - run:
+            name: Create a File
+            command: |
+              FILE=file_not_in_repo.txt.gz
+              find ./directory_in_repo/* | xargs gzip -c > "${FILE}"
+              echo "export FILE=${FILE}" >> $BASH_ENV
+        - github-release/set-release-details
+        - github-release/publish:
+            version: $CURRENT_VERSION
+            title: $TITLE
+            description: $DESCRIPTION
+            file-path: $FILE
+  workflows:
+    your-workflow:
+      jobs:
+        - custom-job

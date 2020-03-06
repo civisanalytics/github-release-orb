@@ -1,0 +1,46 @@
+description: |
+  Conditionally publish a new GitHub Release for a repository based on the version file.
+  If the version in the version file does not match the latest Github Release, a new release will be generated.
+  Release title and description will be parsed from CHANGELOG.md by default.
+
+executor: github
+
+parameters:
+  version-path:
+    description: |
+      File path to file containing the version. If not specified will default to version.py.
+      We will split the line matching version=x.y.z to get the version.
+    type: string
+    default: version.py
+  changelog-path:
+    description: |
+      File path to the changelog containing the description of the release.
+      The format should follow typical Markdown style and [Changlog Semantics](https://keepachangelog.com/en/1.0.0/).
+    type: string
+    default: CHANGELOG.md
+  file-path:
+    description: |
+      File directory to be uploaded in addition to the full repository.
+    type: string
+    default: ""
+  is-draft:
+    description: If true, then the release is a draft.
+    type: boolean
+    default: false
+  is-pre-release:
+    description: If true, then the release is a pre-release.
+    type: boolean
+    default: false
+
+steps:
+  - checkout
+  - set-release-details:
+      version-path: << parameters.version-path >>
+      changelog-path: << parameters.changelog-path >>
+  - publish:
+      version: $CURRENT_VERSION
+      title: $TITLE
+      description: $DESCRIPTION
+      file-path: << parameters.file-path >>
+      is-draft: << parameters.is-draft >>
+      is-pre-release: << parameters.is-pre-release >>
