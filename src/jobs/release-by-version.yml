@@ -15,7 +15,7 @@ parameters:
   changelog-path:
     description: |
       File path to the changelog containing the description of the release.
-      The format should follow typical Markdown style and [Changlog Symantics](https://keepachangelog.com/en/1.0.0/).
+      The format should follow typical Markdown style and [Changlog Semantics](https://keepachangelog.com/en/1.0.0/).
     type: string
     default: CHANGELOG.md
   file-path:
